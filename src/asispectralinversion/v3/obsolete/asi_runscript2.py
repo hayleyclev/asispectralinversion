@@ -24,9 +24,9 @@ Purpose of this script:
     """
 
 # Tweakable inputs
-date = '20230227'  # date in the form of YYYYMMDD
-starttime = '083500'  # time in the format of HHMMSS
-endtime = '084000'  # time in the format of HHMMSS
+date = '20230315'  # date in the form of YYYYMMDD
+starttime = '075100'  # time in the format of HHMMSS
+endtime = '081100'  # time in the format of HHMMSS
 
 mask_artifact = input("Do you want to mask any artifacts? (y/n): ").lower() == 'y'
 
@@ -34,9 +34,9 @@ maglatsite = 65.8  # site of camera in magnetic latitude
 
 lambdas = ['0428', '0558', '0630']  # wavelengths (nm) of imager filters
 
-folder = '/Users/clevenger/Projects/paper01/sop23_data/202302/27/asi/crossing1/in/'  # folder that holds all image files and GLOW outputs for an hour's worth of an event
-base_outdir = '/Users/clevenger/Projects/paper01/sop23_data/202302/27/asi/crossing1/out'  # output directory to store all output figures and h5s
-output_txt = '/Users/clevenger/Projects/paper01/sop23_data/202302/27/asi/crossing1/out/time_ranges.txt'  # output for txt file that shows time cadence
+folder = '/Users/clevenger/Projects/paper01/events/20230315/asi/inputs/'  # folder that holds all image files and GLOW outputs for an hour's worth of an event
+base_outdir = '/Users/clevenger/Projects/paper01/events/20230315/asi/outputs/'  # output directory to store all output figures and h5s
+output_txt = '/Users/clevenger/Projects/paper01/events/20230315/asi/outputs/time_ranges.txt'  # output for txt file that shows time cadence
 
 # Main function calls to run through entire process
 date, starttime, endtime, maglatsite, folder, base_outdir, lambdas = file_data(date, starttime, endtime, maglatsite, folder, output_txt, base_outdir, mask_artifact)

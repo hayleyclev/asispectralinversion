@@ -11,6 +11,7 @@ from os.path import exists
 import wget
 from transformation import feed_data
 import pandas as pd
+import urllib3
 
 """
 Purpose of this script:
@@ -20,6 +21,17 @@ Purpose of this script:
     - gets everything into a nice h5 format before preprocessing and inversion
     - contains main function call that feeds processed h5 files into inversion pipeline
 """
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+def download_no_wget(url, outpath):
+    r = requests.get(url, stream=True, verify=False, timeout=180)
+    r.raise_for_status()
+    with open(outpath, "wb") as f:
+        for chunk in r.iter_content(chunk_size=8192):
+            if chunk:
+                f.write(chunk)
+
 
 def seconds_since_midnight(time):
     """
@@ -84,8 +96,11 @@ def genlinks(date, starttime, endtime):
     # Construct base url
     url = 'http://optics.gi.alaska.edu/amisr_archive/PKR/DASC/PNG/' + year + '/' + date + '/' + hr
     
+    response = requests.get(url, verify=False, timeout=30)
+    
     # Pull and process file list
-    soup = BeautifulSoup(requests.get(url).text,'html.parser')
+    #soup = BeautifulSoup(requests.get(url).text,'html.parser')
+    soup = BeautifulSoup(response.text, 'html.parser')
     # First 5 links are not actual events
     rawlinks = soup.find_all('a')[5:]
     # Turning into a numpy array
@@ -179,7 +194,8 @@ def download_imagery(date, starttime, endtime, folder):
         if exists(file_path):
             continue
         else:
-            wget.download(links[i], out=file_path)
+            #wget.download(links[i], out=file_path) #wget ignores the SSL request disabling thing i had to add, so use the function at the top of this script instead
+            download_no_wget(links[i], file_path)
         
             
     return date, starttime, endtime, folder

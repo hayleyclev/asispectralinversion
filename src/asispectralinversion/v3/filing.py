@@ -263,95 +263,14 @@ def group_by_timestamp(folder, base_outdir):
                 "window_end": end_time
             })
 
-    Write spreadsheet
+    # Write spreadsheet
     df = pd.DataFrame(summary_rows)
     out_csv = os.path.join(base_outdir, "group_timing_summary.csv")
     df.to_csv(out_csv, index=False)
 
-    print(f"\n✔ Grouping complete.")
-    print(f"✔ Spreadsheet written: {out_csv}")
+    print(f"\n Grouping complete.")
+    print(f"Spreadsheet written: {out_csv}")
     return folder
-
-    
-def make_time_list_sliding_window(folder, starttime, endtime, window_size=3):
-    # convert to datetime for easier comparison
-    start_dt = datetime.strptime(starttime, "%H%M%S")
-    end_dt   = datetime.strptime(endtime, "%H%M%S")
-
-    # collect files
-    files = sorted(glob.glob(os.path.join(folder, "*.png")))
-
-    time_ranges = []
-    for i in range(len(files) - (window_size - 1)):
-        # define primary time (middle frame)
-        primary_file = files[i + window_size//2]
-        primary_time = extract_time_from_filename(primary_file)
-
-        # keep only if primary time is within start/end
-        if start_dt <= primary_time <= end_dt:
-            range_start = extract_time_from_filename(files[i])
-            range_end   = extract_time_from_filename(files[i + window_size - 1])
-            time_ranges.append(f"{range_start}-{range_end}")
-
-    return time_ranges
-
-
-def make_time_list_sliding_window(folder, output_txt):
-    """
-    Purpose:
-        - Creates a list of time ranges from the files in the specified folder using a sliding window
-        - Labels the time window by the primary frames from each wavelength
-        - Saves the time ranges to a text file
-    """
-    
-    print("Making list of time ranges using sliding window between image captures...")
-    
-    lambdas = ['0428', '0558', '0630']
-    file_lists = []
-
-    # Get the list of files for each wavelength, sorted by time
-    for lam in lambdas:
-        folder_lam = os.path.join(folder, lam)
-        
-        # Get all PNG files and sort them by date/time based on the filename pattern
-        file_list = sorted(glob.glob(os.path.join(folder_lam, '*_*.png')), 
-                           key=lambda x: re.search(r'_(\d{8}_\d{6})', x).group(1) if re.search(r'_(\d{8}_\d{6})', x) else '')
-        file_lists.append(file_list)
-
-    grouped_files = []
-
-    # Create sliding window groups (primary + before and after for each wavelength)
-    for i in range(1, len(file_lists[0]) - 1):  # Skipping the first and last images
-        group = []
-        for file_list in file_lists:
-            group.extend([file_list[i - 1], file_list[i], file_list[i + 1]])  # previous, primary, next
-        grouped_files.append(group)
-        
-    time_ranges = []
-
-    # Extract time ranges based on primary frames for each wavelength
-    for idx, group in enumerate(grouped_files):
-        if len(group) == 9:  # 3 frames per wavelength (previous, primary, next for each lambda)
-            primary_times = []
-
-            for j in range(1, 9, 3):  # The primary frames are at indices 1, 4, and 7
-                match = re.search(r'_(\d{8}_\d{6})', group[j])
-                if match:
-                    primary_times.append(match.group(1)[8:])  # Extract only time (HHMMSS) portion
-
-            if primary_times:
-                # Start time is the earliest of the primary frames, end time is the latest
-                start_time = min(primary_times)
-                end_time = max(primary_times)
-                range_str = f"{start_time}-{end_time}"
-                time_ranges.append(range_str)
-    
-    # Write the time ranges to a text file
-    with open(output_txt, 'w') as f:
-        for time_range in time_ranges:
-            f.write(f"{time_range}\n")
-
-    return time_ranges
 
 
 
@@ -409,11 +328,11 @@ def make_time_spreadsheet(output_txt, base_outdir):
     return df
 
 
-def file_data(date, starttime, endtime, maglatsite, folder, output_txt, base_outdir):
+def file_data(date, starttime, endtime, maglatsite, folder, base_outdir):
     """
     Purpose:
         - runs all filing processes from functions above
-    """ 
+    """
     
     print("Running all data wrangling processes...")
     
@@ -424,7 +343,7 @@ def file_data(date, starttime, endtime, maglatsite, folder, output_txt, base_out
     #folder = group_frames(folder)
     folder = group_by_timestamp(folder, base_outdir)
     #make_time_list(folder, output_txt)
-    make_time_list_sliding_window(folder, output_txt)
+    #make_time_list_sliding_window(folder, output_txt)
     #df = make_time_spreadsheet(output_txt, base_outdir)
 
     lambdas = ['0428/', '0558/', '0630/']
@@ -466,7 +385,7 @@ def get_grouped_files(folder, lambdas):
     """
     Purpose:
         - pulls together all of the grouped files
-    """ 
+    """
     
     grouped_files = {lam: sorted(glob.glob(os.path.join(folder, lam, 'h5_files', 'grouped_h5_files', '*.h5')), key=lambda x: int(re.search(r'_(\d+)', os.path.basename(x)).group(1))) for lam in lambdas}
     
@@ -478,7 +397,7 @@ def process_grouped_files(date, starttime, endtime, maglatsite, folder, base_out
     Purpose:
         - pulls info from get_grouped_files and feeds all of the processed h5s into feed_data function
         - this is what allows for the process to be time varying!!
-    """ 
+    """
     grouped_files = get_grouped_files(folder, lambdas)
     
     # Find the maximum number of groups across all wavelengths
@@ -507,7 +426,7 @@ def process_grouped_files(date, starttime, endtime, maglatsite, folder, base_out
                       foi_files['0428/'],
                       foi_files['0558/'],
                       foi_files['0630/'],
-                      group_outdir, 
+                      group_outdir,
                       group_number)
         else:
             continue
