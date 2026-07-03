@@ -1,4 +1,5 @@
 from gemini3d.grid.convert import geog2geomag
+from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import h5py
@@ -9,12 +10,12 @@ import datetime as dt
 import shutil
 
 # LOCATE DIRECTORY CONTAINING FILES FROM ASISPECTRALINVERSION RUN
-asi_direc = '/Users/clevenger/Projects/paper01/events/20230227/asi/0835_0840/'
-outdir = '/Users/clevenger/Projects/paper01/events/20230227/gemini_inputs/asi/'
+asi_direc = '/Users/clevenger/Projects/paper01/events/20230315/asi/outputs/'
+outdir = '/Users/clevenger/Projects/paper01/events/20230315/gemini/inputs/'
 
 # ENTER IN AMOUNT OF TIME COVERED AS A TIME RANGE
-start_time = dt.datetime(2023, 2, 27, 8, 35, 9)  # start time
-end_time = dt.datetime(2023, 2, 27, 8, 39, 49)     # end time
+start_time = dt.datetime(2023, 3, 15, 7, 49, 0)  # start time
+end_time = dt.datetime(2023, 3, 15, 8, 14, 0)     # end time
 
 total_time = end_time - start_time  # total time range
 

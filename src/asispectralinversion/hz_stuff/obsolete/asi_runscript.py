@@ -22,16 +22,16 @@ Purpose of this script:
     """
 
 # Tweakable inputs
-date = '20230315'  # date in the form of YYYYMMDD
-starttime = '074900'  # time in the format of HHMMSS
-endtime = '081400'  # time in the format of HHMMSS
+date = '20230304'  # date in the form of YYYYMMDD
+starttime = '101000'  # time in the format of HHMMSS
+endtime = '102000'  # time in the format of HHMMSS
 
 maglatsite = 65.8  # site of camera in magnetic latitude
 
 lambdas = ['0428', '0558', '0630']  # wavelengths (nm) of imager filters
 
-folder = '/Users/clevenger/Projects/paper01/events/20230315/asi/inputs/'  # folder that holds all image files and GLOW outputs for an hour's worth of an event
-base_outdir = '/Users/clevenger/Projects/paper01/events/20230315/asi/outputs/'  # output directory to store all output figures and h5s
+folder = '/Users/clevenger/Projects/paper01/events/20230304/asi/inputs/'  # folder that holds all image files and GLOW outputs for an hour's worth of an event
+base_outdir = '/Users/clevenger/Projects/paper01/events/20230304/asi/outputs/'  # output directory to store all output figures and h5s
 #output_txt = base_outdir + 'time_ranges.txt'  # output for txt file that shows time cadence
 
 # Main function calls to run through entire process
